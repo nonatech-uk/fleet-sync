@@ -1,0 +1,26 @@
+{
+  "_comment": "Bearer tokens keyed by token string. Scopes use fnmatch globs relative to CONTENT_ROOT. Each host gets a unique token. Rotate by regenerating and replacing entries; the server reloads this file on every request.",
+  "tokens": {
+    "REPLACE-WITH-nas-TOKEN": {
+      "host": "nas",
+      "scopes": [
+        "alloy/modules/**",
+        "alloy/hosts/nas/**"
+      ]
+    },
+    "REPLACE-WITH-mum-nas-TOKEN": {
+      "host": "mum-nas",
+      "scopes": [
+        "alloy/modules/**",
+        "alloy/hosts/mum-nas/**"
+      ]
+    },
+    "REPLACE-WITH-mees-app-server-TOKEN": {
+      "host": "mees-app-server",
+      "scopes": [
+        "alloy/modules/**",
+        "alloy/hosts/mees-app-server/**"
+      ]
+    }
+  }
+}

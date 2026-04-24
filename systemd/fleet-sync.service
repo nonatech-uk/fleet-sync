@@ -1,0 +1,14 @@
+[Unit]
+Description=Fleet config sync (pull configs, validate, apply, reload)
+Documentation=https://github.com/stubevan/fleet-sync
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/fleet-sync/fleet-sync.sh
+User=root
+Group=root
+
+# Let a sync take up to 5 minutes before systemd kills it.
+TimeoutStartSec=300

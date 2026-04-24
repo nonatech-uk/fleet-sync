@@ -1,0 +1,16 @@
+[Unit]
+Description=Periodic fleet config sync
+Documentation=https://github.com/stubevan/fleet-sync
+
+[Timer]
+# Hourly + randomised jitter so the whole fleet doesn't hit the server
+# at the same instant.
+OnCalendar=hourly
+RandomizedDelaySec=300
+# Run once shortly after boot so a freshly-booted host picks up pending
+# config before the first hourly tick.
+OnBootSec=2min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

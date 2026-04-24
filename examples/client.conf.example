@@ -1,0 +1,12 @@
+# /etc/fleet-sync/client.conf — bash-sourced.
+# Replace with values appropriate for this host.
+
+# nas reachable at 10.8.0.1 (from mum-nas, mees-app-server, mees-mail-server)
+# or 10.10.0.8 (from albury-app-server, albury-mail-server).
+SERVER_URL="http://10.8.0.1:8443"
+
+# Bearer token path. Keep mode 0400 root:root.
+TOKEN_FILE="/etc/fleet-sync/token"
+
+# If $(hostname -s) doesn't return what the server expects, override:
+# HOSTNAME_OVERRIDE="mees-app-server"

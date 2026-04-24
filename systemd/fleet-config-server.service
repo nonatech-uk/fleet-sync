@@ -1,0 +1,27 @@
+[Unit]
+Description=Fleet config server (serves per-host config bundles over WireGuard)
+After=network-online.target wg-quick@wg0.service wg-quick@wg1.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=FLEET_CONTENT_ROOT=/zfs/git/fleet-config
+Environment=FLEET_TOKENS=/etc/fleet-sync/tokens.json
+Environment=FLEET_BIND=0.0.0.0
+Environment=FLEET_PORT=8443
+ExecStart=/usr/bin/python3 /opt/fleet-sync/fleet_config_server.py
+Restart=on-failure
+RestartSec=5
+User=root
+Group=root
+
+# Minimal hardening — this process only reads files under FLEET_CONTENT_ROOT
+# and listens on a socket.
+ProtectSystem=strict
+ReadOnlyPaths=/zfs/git/fleet-config /etc/fleet-sync /opt/fleet-sync
+ProtectHome=yes
+NoNewPrivileges=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
