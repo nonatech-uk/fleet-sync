@@ -16,7 +16,7 @@ alloy/hosts/__HOST__/config.alloy    /mnt/tank/Apps/alloy/config/config.alloy
 # Validate via the alloy image (host has no `alloy` binary). Validates
 # the IN-PLACE file (same caveat as the native manifest — broken new
 # configs are caught at reload).
-validate:    docker run --rm -v /mnt/tank/Apps/alloy/config:/etc/alloy:ro --entrypoint /bin/alloy grafana/alloy:v1.15.1 fmt /etc/alloy/config.alloy
+validate:    docker run --rm -v /mnt/tank/Apps/alloy/config:/etc/alloy:ro --entrypoint /bin/alloy grafana/alloy:v1.15.1 fmt /etc/alloy/config.alloy >/dev/null
 
 # SIGHUP triggers alloy's in-place config reload — no container restart.
 reload:      docker kill -s HUP alloy

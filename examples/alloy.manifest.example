@@ -16,7 +16,7 @@ alloy/hosts/__HOST__/config.alloy    /etc/alloy/config.alloy
 # file is moved into place AFTER validate runs). It catches an already-
 # poisoned config; broken NEW configs are caught when the reload below
 # fails alloy's own startup parse → fleet-sync rolls back.
-validate:    /usr/bin/alloy fmt /etc/alloy/config.alloy
+validate:    /usr/bin/alloy fmt /etc/alloy/config.alloy >/dev/null
 
 # Reload via SIGHUP — alloy reloads config in place, no service restart,
 # no log gap.
