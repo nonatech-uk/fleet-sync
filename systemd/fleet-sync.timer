@@ -1,6 +1,6 @@
 [Unit]
 Description=Periodic fleet config sync
-Documentation=https://github.com/stubevan/fleet-sync
+Documentation=https://github.com/nonatech-uk/fleet-sync
 
 [Timer]
 # Hourly + randomised jitter so the whole fleet doesn't hit the server

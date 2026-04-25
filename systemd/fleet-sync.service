@@ -1,6 +1,6 @@
 [Unit]
 Description=Fleet config sync (pull configs, validate, apply, reload)
-Documentation=https://github.com/stubevan/fleet-sync
+Documentation=https://github.com/nonatech-uk/fleet-sync
 After=network-online.target
 Wants=network-online.target
 
