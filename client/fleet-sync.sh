@@ -151,11 +151,34 @@ apply_service() {
     fi
   done
 
+  # mktemp in fetch() creates staging files at mode 0600. Preserve the
+  # destination's existing mode/owner across the move so unprivileged
+  # service users (e.g. alloy uid 998) can still read their own config.
+  # On first install: default to 0644 root:root.
+  # Clamp: any file without a world-or-group read bit gets reset to
+  # 0644 root:root — heals files already poisoned by the historical
+  # mktemp-perm-leak bug (would otherwise be preserved as 0600 forever).
+  local mode owner
   for pair in "${pairs[@]}"; do
     dst=${pair##*|}
     stage_path="$svc_stage/$(echo "$dst" | sed 's|/|__|g')"
     mkdir -p "$(dirname "$dst")"
+
+    if [[ -e $dst ]]; then
+      mode=$(stat -c '%a' "$dst")
+      owner=$(stat -c '%U:%G' "$dst")
+    else
+      mode=0644
+      owner=root:root
+    fi
+    if (( (8#$mode & 0044) == 0 )); then
+      mode=0644
+      owner=root:root
+    fi
+
     mv "$stage_path" "$dst"
+    chmod "$mode" "$dst"
+    chown "$owner" "$dst"
   done
 
   # Pass 5: reload service.
