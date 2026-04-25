@@ -1,0 +1,24 @@
+# Manifest for the alloy log agent (containerised install).
+# Use when alloy runs in a docker container — e.g. on TrueNAS Scale where
+# native systemd-managed alloy isn't desirable.
+#
+# Layout: a host directory like /mnt/<pool>/Apps/alloy/ contains a
+# docker-compose.yml that bind-mounts ./config/ RO into /etc/alloy/
+# inside the container. fleet-sync writes config.alloy + modules/ into
+# that ./config/ directory; alloy picks them up after a SIGHUP.
+
+alloy/modules/fleet_levels.alloy     /mnt/tank/Apps/alloy/config/modules/fleet_levels.alloy
+alloy/modules/fleet_journald.alloy   /mnt/tank/Apps/alloy/config/modules/fleet_journald.alloy
+alloy/modules/fleet_docker.alloy     /mnt/tank/Apps/alloy/config/modules/fleet_docker.alloy
+alloy/modules/fleet_drops.alloy      /mnt/tank/Apps/alloy/config/modules/fleet_drops.alloy
+alloy/hosts/__HOST__/config.alloy    /mnt/tank/Apps/alloy/config/config.alloy
+
+# Validate via the alloy image (host has no `alloy` binary). Validates
+# the IN-PLACE file (same caveat as the native manifest — broken new
+# configs are caught at reload).
+validate:    docker run --rm -v /mnt/tank/Apps/alloy/config:/etc/alloy:ro --entrypoint /bin/alloy grafana/alloy:v1.15.1 fmt /etc/alloy/config.alloy
+
+# SIGHUP triggers alloy's in-place config reload — no container restart.
+reload:      docker kill -s HUP alloy
+
+# healthcheck: https://hc.mees.st/ping/REPLACE-WITH-UUID

@@ -1,4 +1,4 @@
-# Manifest for the alloy log agent.
+# Manifest for the alloy log agent (native install).
 # Path layout (server-side, relative to CONTENT_ROOT):
 #   alloy/modules/fleet_*.alloy       — shared by all hosts
 #   alloy/hosts/<hostname>/config.alloy — per-host
@@ -6,17 +6,21 @@
 # __HOST__ is substituted with the short hostname at sync time.
 # The validate command runs with FLEET_STAGE and FLEET_HOST exported.
 
-alloy/modules/fleet_levels.alloy     /zfs/Apps/config/alloy/modules/fleet_levels.alloy
-alloy/modules/fleet_journald.alloy   /zfs/Apps/config/alloy/modules/fleet_journald.alloy
-alloy/modules/fleet_docker.alloy     /zfs/Apps/config/alloy/modules/fleet_docker.alloy
-alloy/modules/fleet_drops.alloy      /zfs/Apps/config/alloy/modules/fleet_drops.alloy
-alloy/hosts/__HOST__/config.alloy    /zfs/Apps/config/alloy/config.alloy
+alloy/modules/fleet_levels.alloy     /etc/alloy/modules/fleet_levels.alloy
+alloy/modules/fleet_journald.alloy   /etc/alloy/modules/fleet_journald.alloy
+alloy/modules/fleet_docker.alloy     /etc/alloy/modules/fleet_docker.alloy
+alloy/modules/fleet_drops.alloy      /etc/alloy/modules/fleet_drops.alloy
+alloy/hosts/__HOST__/config.alloy    /etc/alloy/config.alloy
 
-# Restart alloy. Alloy persists file/journal positions across restart, so the
-# ~1s gap does not lose log lines. The systemd unit performs its own config
-# parse at startup — if the config is broken, the unit fails to start and the
-# sync's reload step returns non-zero, triggering rollback in fleet-sync.sh.
-reload: systemctl restart alloy.service && sleep 3 && systemctl is-active --quiet alloy.service
+# Validate the in-place file. Note this validates the OLD file (the new
+# file is moved into place AFTER validate runs). It catches an already-
+# poisoned config; broken NEW configs are caught when the reload below
+# fails alloy's own startup parse → fleet-sync rolls back.
+validate:    /usr/bin/alloy fmt /etc/alloy/config.alloy
+
+# Reload via SIGHUP — alloy reloads config in place, no service restart,
+# no log gap.
+reload:      systemctl reload alloy
 
 # Ping a healthcheck so "host hasn't synced in N hours" is a visible signal.
 # Replace with the UUID you create for this host.
