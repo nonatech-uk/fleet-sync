@@ -28,7 +28,7 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-CONTENT_ROOT = Path(os.environ.get("FLEET_CONTENT_ROOT", "/zfs/git/fleet-config")).resolve()
+CONTENT_ROOT = Path(os.environ.get("FLEET_CONTENT_ROOT", "/zfs/Apps/fleet-config")).resolve()
 TOKENS_PATH = Path(os.environ.get("FLEET_TOKENS", "/etc/fleet-sync/tokens.json"))
 BIND_HOST = os.environ.get("FLEET_BIND", "0.0.0.0")
 BIND_PORT = int(os.environ.get("FLEET_PORT", "8443"))

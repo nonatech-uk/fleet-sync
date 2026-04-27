@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-Environment=FLEET_CONTENT_ROOT=/zfs/git/fleet-config
+Environment=FLEET_CONTENT_ROOT=/zfs/Apps/fleet-config
 Environment=FLEET_TOKENS=/etc/fleet-sync/tokens.json
 Environment=FLEET_BIND=0.0.0.0
 Environment=FLEET_PORT=8443
@@ -18,7 +18,7 @@ Group=root
 # Minimal hardening — this process only reads files under FLEET_CONTENT_ROOT
 # and listens on a socket.
 ProtectSystem=strict
-ReadOnlyPaths=/zfs/git/fleet-config /etc/fleet-sync /opt/fleet-sync
+ReadOnlyPaths=/zfs/Apps/fleet-config /etc/fleet-sync /opt/fleet-sync
 ProtectHome=yes
 NoNewPrivileges=yes
 PrivateTmp=yes
